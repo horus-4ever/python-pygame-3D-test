@@ -34,7 +34,7 @@ class Object:
         print(vertices)
         self.vertices = vertices
         self.edges = edges
-        self.rotation = [0, 0, 0]
+        self.rotation = [3, 3, 0]
         self.len = length
 
     def rotate(self, axe, o):
@@ -57,15 +57,17 @@ def draw_shape(screen, shape, size):
 def main(screen):
     clock = pygame.time.Clock()
     size = screen.get_width(), screen.get_height()
-    vertices = [(1, 1, 1), (1, 1, -1),
-                (1, -1, 1), (1, -1, -1),
-                (-1, 1, 1), (-1, 1, -1),
-                (-1, -1, 1), (-1, -1, -1)]
+    vertices = [(-1, -1, -1), (-1, -1, 1),
+                (-1, 1, -1), (-1, 1, 1),
+                (1, -1, -1), (1, -1, 1),
+                (1, 1, -1), (1, 1, 1),
+                (0, 0, 2.25)]
     lines = [(0, 1), (0, 2), (2, 3), (1, 3),
              (4, 5), (4, 6), (6, 7), (5, 7),
-             (0, 4), (1, 5), (2, 6), (3, 7)]
+             (0, 4), (1, 5), (2, 6), (3, 7),
+             (7, 8), (1, 8), (5, 8), (3, 8)]
 
-    cube = Object(vertices, lines, 70)
+    house = Object(vertices, lines, 70)
 
     rad = 0.05
 
@@ -84,9 +86,9 @@ def main(screen):
         keys = pygame.key.get_pressed()
         for key in params:
             if keys[key]:
-                cube.rotate(*params[key])
+                house.rotate(*params[key])
         screen.fill(WHITE)
-        draw_shape(screen, cube, size)
+        draw_shape(screen, house, size)
         pygame.display.flip()
         clock.tick(40)
 

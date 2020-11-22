@@ -26,5 +26,6 @@ class Screen:
                 last = point
 
     def draw(self):
-        for shape in reversed(sorted(self.shapes, key=lambda shape: shape.overall_distance(self.camera))):
+        shapes = filter(lambda shape: shape.can_render(self.camera), self.shapes)
+        for shape in sorted(shapes, key=lambda shape: shape.overall_distance(self.camera), reverse=True):
             shape.render(self.camera, self)

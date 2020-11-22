@@ -2,7 +2,8 @@ import pygame
 from screen import Screen
 from camera import Camera
 from utils import D3Point, D3Angle, D2Point
-from shapes import Triangle, Shape, Cube
+from shapes import Triangle, Shape, Cube, Chunk
+import random
 
 
 pygame.init()
@@ -12,7 +13,7 @@ SCREEN_SIZE = (500, 500)
 
 SCREEN = pygame.display.set_mode(SCREEN_SIZE)
 CLOCK = pygame.time.Clock()
-FPS = 60
+FPS = 120
 
 
 CAMERA = Camera(
@@ -37,25 +38,46 @@ TRIANGLE2 = Triangle(
 )
 """
 
-CUBE = Cube(
-    D3Point(5, 5, 50),
+"""CUBES = []
+for i in range(100):
+    for j in range(100):
+        n = random.randint(-1, 1)
+        CUBE = Cube(
+            D3Point(i * 10, 5, 50 + j * 10),
+            10
+        )
+        CUBES.append(CUBE)
+"""
+CHUNK = Chunk(
+    D3Point(-2, 0, 40),
+    2,
     10
 )
+
+CHUNKS = []
+for i in range(10):
+    for j in range(10):
+        CHUNKS.append(Chunk(
+            D3Point(i * 10 * 2, 5, 50 + j * 10 * 2),
+            2,
+            10
+        ))
+
+# CUBES = Shape(*CUBES)
 
 DISPLAY = Screen(
     SCREEN,
     CAMERA,
     D2Point(SCREEN_SIZE[0] // 2, SCREEN_SIZE[1] // 2),
-    CUBE
+    *CHUNKS
 )
 
 D_FACTOR = 0.2
 
 
 running = True
-SCREEN.fill((255, 255, 255))
 while running:
-    SCREEN.fill((255, 255, 255))
+    change = False
     keys = pygame.key.get_pressed()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -63,17 +85,37 @@ while running:
             break
     if keys[pygame.K_p]:
         DISPLAY.camera.rotate(0, 0.01, 0)
+        change = True
     if keys[pygame.K_o]:
         DISPLAY.camera.rotate(0, -0.01, 0)
+        change = True
+    if keys[pygame.K_m]:
+        DISPLAY.camera.rotate(0.01, 0, 0)
+        change = True
+    if keys[pygame.K_l]:
+        DISPLAY.camera.rotate(-0.01, 0, 0)
+        change = True
     if keys[pygame.K_z]:
         DISPLAY.camera.position.z += D_FACTOR
+        change = True
     if keys[pygame.K_s]:
         DISPLAY.camera.position.z -= D_FACTOR
+        change = True
     if keys[pygame.K_q]:
         DISPLAY.camera.position.x -= D_FACTOR
+        change = True
     if keys[pygame.K_d]:
         DISPLAY.camera.position.x += D_FACTOR
-    DISPLAY.draw()
+        change = True
+    if keys[pygame.K_SPACE]:
+        DISPLAY.camera.position.y -= D_FACTOR
+        change = True
+    if keys[pygame.K_LSHIFT]:
+        DISPLAY.camera.position.y += D_FACTOR
+        change = True
+    if change:
+        SCREEN.fill((255, 255, 255))
+        DISPLAY.draw()
     CLOCK.tick(FPS)
     pygame.display.update()
 
